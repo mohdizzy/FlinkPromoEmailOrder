@@ -1,0 +1,51 @@
+{
+    "order_number":"AB-1234",
+    "created_at":"2019-05-04T05:47:31+10:00",
+    "status":"received",
+    "customer":{
+        "first_name":"Jane",
+        "last_name":"Doe",
+        "email":"janedoe@example.com",
+        "phone":"(555) 555-1234",
+        "customerNumber":"2634-245uif-342"
+    },
+    "shipping":{
+        "address":{
+            "address1":"123 Main St",
+            "address2":"Apt 4",
+            "city":"Houston",
+            "state":"TX",
+            "country_code":"US",
+            "zip":"77001"
+        },
+        "method":{
+            "description":"Fast Shipping",
+            "carrier":"FedEx",
+            "carrier_code":"FDEG"
+        }
+    },
+    "products":[
+        {
+            "sku":"723",
+            "item_name":"Test-Item",
+            "sku_name":"Test-Item-Sku",
+            "quantity":1,
+            "weight":1,
+            "sale_price":9.99,
+            "subtotal":0,
+            "sales_tax_collected":0
+        }
+    ],
+    "totals":{
+        "items":19.98,
+        "shipping":11.98,
+        "additional shipping":0,
+        "tax":4.04,
+        "grand":36
+    },
+    "payment_details":{
+        "brand":"Visa",
+        "last_4":"1234",
+        "status":"successful"
+    }
+}
