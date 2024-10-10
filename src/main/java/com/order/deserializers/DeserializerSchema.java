@@ -1,5 +1,10 @@
 package com.order.deserializers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
+import net.minidev.json.JSONObject;
+import netscape.javascript.JSObject;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 
@@ -8,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 /**
  * This deserializer file is used to perform custom operations such as conversion from
@@ -18,6 +24,8 @@ import java.nio.charset.StandardCharsets;
 public class DeserializerSchema implements DeserializationSchema<String> {
 
     private static final Logger logger = LoggerFactory.getLogger(DeserializerSchema.class);
+
+    private static final ObjectMapper mapper = new ObjectMapper();
     static final String DESERIALIZATION = "DESERIALIZATION";
     @Override
     public String deserialize(byte[] bytes) throws IOException {
@@ -38,9 +46,13 @@ public class DeserializerSchema implements DeserializationSchema<String> {
 //            // To convert byte to string
 //            String inputJsonString = outStr.toString();
 
-            // If no decompression is required, just return payload string
-            return new String(bytes, StandardCharsets.UTF_8);
+            // decode base64 encoded payload
+            byte[] decodedBytes = Base64.getDecoder().decode(bytes);
+
+            // Convert the decoded bytes to a string
+            return new String(decodedBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
+            System.out.println(e);
             logger.error("Failed deserialization event");
             return null;
         }

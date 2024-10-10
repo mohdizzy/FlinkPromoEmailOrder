@@ -69,9 +69,6 @@ public class ProcessOrderJob
 
 		// Connector for pushing the processed events from Flink to destination topic
 		// You can specify a default serializer or setup a custom one, here we have a custom one
-		Properties sinkProps = new Properties();
-		sinkProps.setProperty("bootstrap.servers", bootstrapServers);
-		sinkProps.setProperty("transaction.timeout.ms", "90000"); // can be defined under Properties section
 		KafkaSink<String> ordersSink = KafkaSink.<String>builder().setKafkaProducerConfig(properties.get("KafkaOrderSink"))
 				.setRecordSerializer(new OutputSchemaProducer(processedOrderSinkTopic)).setTransactionalIdPrefix("order-events")
 				.build();
