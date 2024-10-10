@@ -101,15 +101,21 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.flink</groupId>
-      <artifactId>flink-streaming-java_2.11</artifactId>
-      <version>1.13.2</version>
+      <artifactId>flink-streaming-java</artifactId>
+      <version>1.19.1</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.flink</groupId>
-      <artifactId>flink-runtime_2.11</artifactId>
-      <version>1.13.2</version>
+      <artifactId>flink-runtime-web</artifactId>
+      <version>1.17.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-runtime</artifactId>
+      <version>1.19.1</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -127,33 +133,41 @@
     </dependency>
     <dependency>
       <groupId>org.apache.flink</groupId>
-      <artifactId>flink-test-utils_2.12</artifactId>
-      <version>1.13.2</version>
+      <artifactId>flink-test-utils</artifactId>
+      <version>1.19.1</version>
       <scope>test</scope>
       <exclusions>
+        <exclusion>
+          <artifactId>flink-table-common</artifactId>
+          <groupId>org.apache.flink</groupId>
+        </exclusion>
         <exclusion>
           <artifactId>flink-test-utils-junit</artifactId>
           <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>flink-runtime_2.12</artifactId>
+          <artifactId>flink-core</artifactId>
           <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>flink-runtime_2.12</artifactId>
+          <artifactId>flink-rpc-akka-loader</artifactId>
           <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>flink-clients_2.12</artifactId>
+          <artifactId>junit-jupiter</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>flink-statebackend-rocksdb</artifactId>
           <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>flink-streaming-java_2.12</artifactId>
+          <artifactId>flink-statebackend-changelog</artifactId>
           <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>junit</artifactId>
-          <groupId>junit</groupId>
+          <artifactId>flink-dstl-dfs</artifactId>
+          <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
           <artifactId>curator-test</artifactId>
@@ -174,10 +188,12 @@
     </dependencies>
   </dependencyManagement>
   <properties>
-    <scala.binary.version>2.11</scala.binary.version>
+    <aws.connector.version>4.3.0-1.19</aws.connector.version>
     <kda.version>1.0.1</kda.version>
-    <java.version>1.8</java.version>
-    <flink.version>1.13.2</flink.version>
+    <java.version>11</java.version>
+    <kafka.connector.version>3.2.0-1.19</kafka.connector.version>
+    <kda.runtime.version>1.2.0</kda.runtime.version>
+    <flink.version>1.19.1</flink.version>
     <sonar.coverage.exclusions>**/serializers/*,**/PnrBkgJob.java</sonar.coverage.exclusions>
   </properties>
 </project>

@@ -1,7 +1,7 @@
 package com.order.serializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.flink.streaming.connectors.kafka.KafkaSerializationSchema;
+import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 
 public class OutputSchemaProducer
-        implements KafkaSerializationSchema<String>
+        implements KafkaRecordSerializationSchema<String>
 {
     private String topic;
     private static final Logger logger = LoggerFactory.getLogger(OutputSchemaProducer.class);
@@ -23,7 +23,7 @@ public class OutputSchemaProducer
     }
 
     @Override
-    public ProducerRecord<byte[], byte[]> serialize(String payload, Long timestamp)
+    public ProducerRecord<byte[], byte[]> serialize(String payload, KafkaRecordSerializationSchema.KafkaSinkContext kafkaSinkContext, Long timestamp)
     {
         byte[] value = null;
         byte[] key = null;
