@@ -1,10 +1,6 @@
 package com.order.deserializers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.Configuration;
-import net.minidev.json.JSONObject;
-import netscape.javascript.JSObject;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 
@@ -25,14 +21,12 @@ public class DeserializerSchema implements DeserializationSchema<String> {
 
     private static final Logger logger = LoggerFactory.getLogger(DeserializerSchema.class);
 
-    private static final ObjectMapper mapper = new ObjectMapper();
-    static final String DESERIALIZATION = "DESERIALIZATION";
     @Override
     public String deserialize(byte[] bytes) throws IOException {
         try {
 
             /**
-             * This block decompresses a GZIP payload. Usually some external source streams send compressed payloads
+             * This block decompresses a GZIP payload. Some external source streams send compressed payloads
              * when they are being routed through the internet for better network performance
              */
 //            byte[] compressed = Base64.getDecoder().decode(new String(bytes, StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8));
@@ -52,7 +46,6 @@ public class DeserializerSchema implements DeserializationSchema<String> {
             // Convert the decoded bytes to a string
             return new String(decodedBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            System.out.println(e);
             logger.error("Failed deserialization event");
             return null;
         }

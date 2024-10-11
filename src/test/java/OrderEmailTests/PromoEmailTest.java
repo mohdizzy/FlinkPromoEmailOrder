@@ -1,11 +1,8 @@
 package OrderEmailTests;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.jayway.jsonpath.Configuration;
 import com.order.deserializers.DeserializerSchema;
 import com.order.functions.OrderProcessorFunction;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.order.utils.JsonpathExceptionHandler;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -75,9 +72,9 @@ public class PromoEmailTest
 	{
 		String stringPath = new File("./").getCanonicalPath();
 		stringPath += filePath;
-		String adh = new String(Files.readAllBytes(Paths.get(stringPath)));
+		String orderEvent = new String(Files.readAllBytes(Paths.get(stringPath)));
 		DeserializerSchema deserializerSchema = new DeserializerSchema();
-		return deserializerSchema.deserialize(adh.getBytes());
+		return deserializerSchema.deserialize(orderEvent.getBytes());
 	}
 
 	static List<String> output = new ArrayList<>();
@@ -96,7 +93,7 @@ public class PromoEmailTest
 			}
 		};
 
-		buildFlinkJobCore(env, adhFakeSource(), fakeSink);
+		buildFlinkJobCore(env, orderFakeSource(), fakeSink);
 		env.execute();
 		String jsonFromKafka = new ObjectMapper().writeValueAsString(output);
 		System.out.println("Flink Output: " + jsonFromKafka);
@@ -127,7 +124,7 @@ public class PromoEmailTest
 
 	}
 
-	private static SourceFunction<String> adhFakeSource()
+	private static SourceFunction<String> orderFakeSource()
 	{
 		return new SourceFunction<String>()
 		{
