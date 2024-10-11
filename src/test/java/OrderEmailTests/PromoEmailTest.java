@@ -12,6 +12,8 @@ import org.apache.flink.streaming.api.operators.KeyedProcessOperator;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 import org.apache.flink.streaming.util.KeyedOneInputStreamOperatorTestHarness;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -32,6 +34,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class PromoEmailTest
 {
 	private static final ObjectMapper mapper = new ObjectMapper();
+	private static final Logger logger = LoggerFactory.getLogger(PromoEmailTest.class);
 
 	@Test
 	void testFlinkJob() throws Exception
@@ -50,26 +53,28 @@ public class PromoEmailTest
 			}
 			catch (Exception e)
 			{
+				System.out.println(e);
+				logger.info("cannot parse json");
 				return "";
 			}
 		},TypeInformation.of(String.class));
 		harness.open();
 
-		harness.processElement(createPNREvent("/src/test/java/events/order_event1.txt"), Instant.now().toEpochMilli());
-		harness.processElement(createPNREvent("/src/test/java/events/order_event2.txt"), Instant.now().toEpochMilli());
+		harness.processElement(createOrderEvent("/src/test/java/events/order_event1.txt"), Instant.now().toEpochMilli());
+		harness.processElement(createOrderEvent("/src/test/java/events/order_event2.txt"), Instant.now().toEpochMilli());
 
 		List<StreamRecord<? extends String>> records = harness.extractOutputStreamRecords();
 		assertThat(records.size()).isEqualTo(1);
 		System.out.println(mapper.writeValueAsString(records.get(0)));
 	}
 
-	private String createPNREvent(String filePath) throws Exception
+	private String createOrderEvent(String filePath) throws Exception
 	{
 		String stringPath = new File("./").getCanonicalPath();
 		stringPath += filePath;
-		String adh = new String(Files.readAllBytes(Paths.get(stringPath)));
+		String orderEvent = new String(Files.readAllBytes(Paths.get(stringPath)));
 		DeserializerSchema deserializerSchema = new DeserializerSchema();
-		return deserializerSchema.deserialize(adh.getBytes());
+		return deserializerSchema.deserialize(orderEvent.getBytes());
 	}
 
 	static List<String> output = new ArrayList<>();
@@ -88,18 +93,18 @@ public class PromoEmailTest
 			}
 		};
 
-		buildFlinkJobCore(env, adhFakeSource(), fakeSink);
+		buildFlinkJobCore(env, orderFakeSource(), fakeSink);
 		env.execute();
 		String jsonFromKafka = new ObjectMapper().writeValueAsString(output);
 		System.out.println("Flink Output: " + jsonFromKafka);
 		assertThat(output.size()).isEqualTo(1);
 	}
 
-	private void buildFlinkJobCore(StreamExecutionEnvironment env, SourceFunction<String> adhSource,
+	private void buildFlinkJobCore(StreamExecutionEnvironment env, SourceFunction<String> orderSource,
 			SinkFunction<String> sink)
 	{
 
-		SingleOutputStreamOperator<String> mainDataStream = env.addSource(adhSource)
+		SingleOutputStreamOperator<String> mainDataStream = env.addSource(orderSource)
 				.keyBy(input -> {
 					try
 					{
@@ -119,7 +124,7 @@ public class PromoEmailTest
 
 	}
 
-	private static SourceFunction<String> adhFakeSource()
+	private static SourceFunction<String> orderFakeSource()
 	{
 		return new SourceFunction<String>()
 		{

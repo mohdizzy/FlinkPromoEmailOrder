@@ -11,10 +11,12 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>1.8</java.version>
-        <scala.binary.version>2.11</scala.binary.version>
+        <java.version>11</java.version>
+        <aws.connector.version>4.3.0-1.19</aws.connector.version> <!-- For Kinesis -->
+        <kda.runtime.version>1.2.0</kda.runtime.version>
         <kda.version>1.0.1</kda.version>
-        <flink.version>1.13.2</flink.version>
+        <flink.version>1.19.1</flink.version>
+        <kafka.connector.version>3.2.0-1.19</kafka.connector.version>
         <sonar.coverage.exclusions>
             **/serializers/*,**/PnrBkgJob.java
         </sonar.coverage.exclusions>
@@ -37,6 +39,12 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-kinesisanalytics-runtime</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-shaded-jackson</artifactId>
+                </exclusion>
+            </exclusions>
             <version>${kda.version}</version>
         </dependency>
 
@@ -64,20 +72,14 @@
         </dependency>
 
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20210307</version>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-kafka</artifactId>
+            <version>${kafka.connector.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka_2.11</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-streaming-java_2.11</artifactId>
+            <artifactId>flink-streaming-java</artifactId>
             <version>${flink.version}</version>
             <scope>provided</scope>
             <classifier>tests</classifier>
@@ -85,7 +87,14 @@
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-clients_2.11</artifactId>
+            <artifactId>flink-runtime-web</artifactId>
+            <version>1.17.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-clients</artifactId>
             <version>${flink.version}</version>
         </dependency>
 
@@ -98,7 +107,7 @@
         <!-- Test dependencies start -->
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-runtime_2.11</artifactId>
+            <artifactId>flink-runtime</artifactId>
             <version>${flink.version}</version>
             <scope>test</scope>
             <classifier>tests</classifier>
@@ -106,7 +115,7 @@
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-streaming-java_2.11</artifactId>
+            <artifactId>flink-streaming-java</artifactId>
             <version>${flink.version}</version>
             <scope>test</scope>
             <classifier>tests</classifier>
@@ -133,7 +142,7 @@
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-test-utils_2.12</artifactId>
+            <artifactId>flink-test-utils</artifactId>
             <version>${flink.version}</version>
             <scope>test</scope>
         </dependency>
